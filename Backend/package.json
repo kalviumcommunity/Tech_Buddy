@@ -8,8 +8,9 @@
     "hash": "^0.2.1",
     "mongoose": "^8.2.2",
     "nodemon": "^3.1.0",
-    "passport": "^0.7.0",
+    "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^5.0.1",
     "validator": "^13.11.0"
   },
   "scripts": {
