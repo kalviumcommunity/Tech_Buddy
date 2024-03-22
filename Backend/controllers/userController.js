@@ -2,6 +2,12 @@ const passport = require('passport');
 const User = require('../modals/userModel');
 const bcrypt = require('bcrypt');
 require('../middleware/passport');
+var GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
+
+
+
+
+
 
 const signupUser = async (req, res) => {
   let { username, password } = req.body;
@@ -37,4 +43,21 @@ const loginUser = (req, res, next) => {
   })(req, res, next);
 };
 
-module.exports = { signupUser, loginUser };
+
+const logout = (req, res) => {
+  req.logout();
+  res.status(200).json({ message: "Logout successful" });
+};
+
+const google = (req, res, next) => {
+  passport.authenticate('google', { scope: ['email', 'profile'] })(req, res, next);
+};
+
+const googlecallback = (req, res, next) => {
+  passport.authenticate('google', {
+    successRedirect: 'http://localhost:5173/home',
+    failureRedirect: 'http://localhost:5173/login',
+  })(req, res, next);
+};
+
+module.exports = { signupUser, loginUser ,logout,google,googlecallback};

@@ -1,4 +1,5 @@
 require("dotenv").config();
+const cors = require("cors");
 const mongoose = require("mongoose");
 const express =require("express");
 const session = require('express-session');
@@ -7,6 +8,10 @@ const MongoStore = require('connect-mongo'); // Instantiate MongoStore with sess
 const app = express()
 
 app.use(express.static(__dirname + '/public'));
+
+
+app.use(cors());
+
 
 app.use(
   session({
@@ -24,10 +29,12 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session()); 
 
+
+
 const userRoutes=require("./routes/user")
 
 app.use(express.json());
-app.use("/user",userRoutes);
+app.use("/api/user",userRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
