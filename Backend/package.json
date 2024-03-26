@@ -7,11 +7,13 @@
     "express": "^4.18.3",
     "express-session": "^1.18.0",
     "hash": "^0.2.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.2",
     "nodemon": "^3.1.0",
     "passport": "^0.4.0",
     "passport-google-oauth2": "^0.2.0",
     "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",
     "validator": "^13.11.0"

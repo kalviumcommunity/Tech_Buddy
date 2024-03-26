@@ -1,5 +1,8 @@
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+const JwtStrategy = require('passport-jwt').Strategy,
+    ExtractJwt = require('passport-jwt').ExtractJwt;
+const opts = {}
+
 const User=require("../modals/userModel");
 const { compareSync } = require("bcrypt");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -10,10 +13,10 @@ passport.use(
     {
       clientID:     process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/api/user/google/",
+      callbackURL: "http://localhost:3000/api/user/google/callback",
     },
     async function (accessToken, refreshToken, profile, cb) {
-      console.log(accessToken, profile);
+      // console.log(accessToken, profile);
       const user = await User.findOne({ googleId: profile.id });
       if (!user) {
         let newUser = new User({
@@ -29,14 +32,24 @@ passport.use(
   )
 );
 
-passport.use(new LocalStrategy(
-  async function(username, password, done) {
-    const user = await User.findOne({ username: username });
-    if (!user) { return done(null, false,{message:"Incorrect Username."}); }
-    if (!compareSync(password, user.password)) { return done(null, false,{message:"Incorrect password."}); }
-    return done(null, user);
-}
-));
+
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = process.env.SECERET;
+
+passport.use(new JwtStrategy(opts, function (jwt_payload, done) {
+  User.findOne({ id: jwt_payload.id }, function (err, user) {
+      if (err) {
+          return done(err, false);
+      }
+      if (user) {
+          return done(null, user);
+      } else {
+          return done(null, false);
+      }
+  });
+}));
+
+
 
 passport.serializeUser(function(user, cb) {
     cb(null,user.id)
@@ -51,6 +64,8 @@ passport.deserializeUser(async function(id, done) {
     done(error, null);
   }
 });
+
+
 
 
 
