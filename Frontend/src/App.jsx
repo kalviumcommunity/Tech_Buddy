@@ -1,9 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
-// import axios from 'axios';
-// import Home from './components/Home';
 
-
-
+import React from "react"
 
 
 function App() {
@@ -15,7 +13,6 @@ function App() {
     } catch (error) {
       console.error('Login error:', error);
       setError('An error occurred while initiating Google login.');
-      // Log the full error object for debugging
       console.error('Full Error:', error);
     }
   };
