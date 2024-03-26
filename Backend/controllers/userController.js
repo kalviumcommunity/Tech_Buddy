@@ -9,28 +9,41 @@ var jwt = require('jsonwebtoken');
 
 
 const signupUser = async (req, res) => {
+  const password = req.body.password;
+
+  // Regular expression to check if the password contains at least one letter, one symbol, and one capital letter, and is 8 characters long
+  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8}$/;
+
+  if (!passwordRegex.test(password)) {
+    return res.send({
+      success: false,
+      message: "Password must contain at least one letter, one symbol, one capital letter, and be 8 characters long."
+    });
+  }
+
   const user = new User({
-      username: req.body.username,
-      password: hashSync(req.body.password, 10)
-  })
+    username: req.body.username,
+    password: hashSync(password, 10)
+  });
 
   user.save().then(user => {
-      res.send({
-          success: true,
-          message: "User created successfully.",
-          user: {
-              id: user._id,
-              username: user.username
-          }
-      })
+    res.send({
+      success: true,
+      message: "User created successfully.",
+      user: {
+        id: user._id,
+        username: user.username
+      }
+    });
   }).catch(err => {
-      res.send({
-          success: false,
-          message: "Something went wrong",
-          error: err
-      })
-  })
-}
+    res.send({
+      success: false,
+      message: "Something went wrong",
+      error: err
+    });
+  });
+};
+
 
 
 
